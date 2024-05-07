@@ -4,9 +4,6 @@ import './styles.css'
 import PropTypes from 'prop-types';
 import currencySymbolMap from 'currency-symbol-map';
 
-
-
-// { postedOn, companyLogo, companyName, payRange, aboutCompany, experienceRequired }
 export default function JobCard({ job }) {
   const { companyName,
     jdLink,

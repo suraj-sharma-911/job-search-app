@@ -52,7 +52,6 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        console.log('applied filter --->', filters);
     }, [filters]);
 
     const handleSearchChange = (event) => {
@@ -73,18 +72,18 @@ export default function Dashboard() {
         if (roles && roles !== "") {
             rolesFlag = jobRole.toLowerCase() === roles.toLocaleLowerCase();
         } if (experience && experience !== "") {
-            console.log('inside experience')
             experienceFlag = Number(minExp) === Number(experience);
         }
         if (minSalary && minSalary !== "") {
             minSalaryFlag = Number(minSalary) === Number(minJdSalary);
         }
-        if (searchQuery && searchQuery !== "" && companyName.toLowerCase().includes(searchQuery.toLowerCase())) {
-            searchFlag = true;
+        if (searchQuery && searchQuery !== "" ) {
+            searchFlag = companyName.toLowerCase().includes(searchQuery.toLowerCase())
         }
 
         return rolesFlag && experienceFlag && minSalaryFlag && searchFlag;
     });
+
     const handleRefresh = () => {
         setFilters({
             roles: '',
@@ -94,54 +93,62 @@ export default function Dashboard() {
         });
     };
 
-    console.log(filteredJobData)
     return (
         <>
-            <FormControl sx={{ m: 5, width: '300px' }}>
-                <InputLabel id="roles">Roles</InputLabel>
-                <Select id='roles' label="Roles" value={filters.roles} onChange={(e) => handleFilterChange('roles', e.target.value)}>
-                    {Array.from(uniqueRoles).map((role) => (
-                        <MenuItem key={role} value={role}>{role}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <FormControl sx={{ m: 5, width: '300px' }}>
-                <InputLabel id="experience">Experience</InputLabel>
-                <Select id='experience' label="experience" value={filters.experience} onChange={(e) => handleFilterChange('experience', e.target.value)}>
-                    {Array.from(uniqueMinYears).sort((a, b) => { return a - b }).map((exp) => (
-                        <MenuItem key={exp} value={exp}>{exp}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <FormControl sx={{ m: 5, width: '300px' }}>
-                <InputLabel id="minSalary">Minimum Base Pay Salary</InputLabel>
-                <Select id='minSalary' label="Minimum Base Pay Salary" value={filters.minSalary} onChange={(e) => handleFilterChange('minSalary', e.target.value)}>
-                    {Array.from(uniqueMinSalaries).sort((a, b) => { return a - b }).map((salary) => (
-                        <MenuItem key={salary} value={salary}>{salary}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <TextField
-                    sx={{ m: 5, width: '300px' }}
-                    id="outlined-basic"
-                    label="Search"
-                    variant="outlined"
-                    value={filters.searchQuery}
-                    onChange={handleSearchChange}
-                />
-                <IconButton onClick={handleRefresh} sx={{ p: '10px' }}>
-                    <RefreshIcon />
-                </IconButton>
-            </div>
-            <div className="dashboard-container">
-                {loading && <p>Loading...</p>}
-                {error && <p>Error: {error}</p>}
-                {filteredJobData ? filteredJobData.map((job) => (<JobCard key={job.jdUid} job={job} />)) : jobData.map((job) => (
-                    <JobCard key={job.jdUid} job={job} />
-                ))}
+            <div >
+                <div
+                    style={{ position: 'sticky', top: '0', zIndex: '100', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(5px)', padding: '10px 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <FormControl sx={{ m: 5, width: '300px' }}>
+                            <InputLabel id="roles">Roles</InputLabel>
+                            <Select id='roles' label="Roles" value={filters.roles} onChange={(e) => handleFilterChange('roles', e.target.value)}>
+                                {Array.from(uniqueRoles).map((role) => (
+                                    <MenuItem key={role} value={role}>{role}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{ m: 5, width: '300px' }}>
+                            <InputLabel id="experience">Experience</InputLabel>
+                            <Select id='experience' label="experience" value={filters.experience} onChange={(e) => handleFilterChange('experience', e.target.value)}>
+                                {Array.from(uniqueMinYears).sort((a, b) => { return a - b }).map((exp) => (
+                                    <MenuItem key={exp} value={exp}>{exp}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{ m: 5, width: '300px' }}>
+                            <InputLabel id="minSalary">Minimum Base Pay Salary</InputLabel>
+                            <Select id='minSalary' label="Minimum Base Pay Salary" value={filters.minSalary} onChange={(e) => handleFilterChange('minSalary', e.target.value)}>
+                                {Array.from(uniqueMinSalaries).sort((a, b) => { return a - b }).map((salary) => (
+                                    <MenuItem key={salary} value={salary}>{salary}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <TextField
+                                sx={{ m: 5, width: '300px' }}
+                                id="outlined-basic"
+                                label="Search"
+                                variant="outlined"
+                                value={filters.searchQuery}
+                                onChange={handleSearchChange}
+                            />
+                            <IconButton onClick={handleRefresh} sx={{ p: '10px', right: '5px' }}>
+                                <RefreshIcon />
+                            </IconButton>
+                        </div>
+                    </div>
 
+
+                </div>
+                <div className="dashboard-container">
+                    {loading && <p>Loading...</p>}
+                    {error && <p>Error: {error}</p>}
+                    {filteredJobData ? (filteredJobData.length > 0 ? filteredJobData.map((job) => (<JobCard key={job.jdUid} job={job} />)) : <p>No data Found</p>) : jobData.map((job) => (
+                        <JobCard key={job.jdUid} job={job} />
+                    ))}
+                </div>
             </div>
+
         </>
     )
 }
