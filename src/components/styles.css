@@ -1,0 +1,69 @@
+body {
+  text-rendering: optimizeLegibility;
+}
+.dashboard-container {
+  margin: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Distribute items evenly along the main axis */
+}
+
+.job-card {
+  width: calc(
+    33.33% - 20px
+  ); /* Three cards per row by default with 10px spacing between */
+  margin-bottom: 20px; /* Adjust the margin between rows */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  /* flex-direction: column; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border: 1px solid #ccc;
+  border-radius: 18px !important;
+  padding-bottom: 50px;
+}
+
+.card-actions {
+  position: relative;
+  margin-top: 20px;
+  left: 50%; /* Position actions at the center horizontally */
+  transform: translateX(-50%); /* Center actions horizontally */
+}
+
+.card-actions-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.job-card-actions button {
+  margin: 5px; /* Add space around each button */
+}
+
+.view-details-link {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1; /* Ensure the link appears above other content */
+}
+
+.ref-avatar {
+  width: 22px;
+  height: 22px;
+  padding: 8px;
+  border-radius: 50%;
+  filter: blur(0.75px);
+}
+
+@media (max-width: 1024px) {
+  .job-card {
+    width: calc(50% - 10px); /* Two cards per row on smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .job-card {
+    width: 100%; /* One card per row on even smaller screens */
+  }
+}
