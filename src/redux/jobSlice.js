@@ -4,29 +4,32 @@ import axios from 'axios';
 
 export const fetchJobData = createAsyncThunk(
     'jobs/fetchJobData',
-    async () => {
-        const options = {
-            method: 'POST',
-            url: "https://api.weekday.technology/adhoc/getSampleJdJSON",
-            body: {
-                "limit": 10,
-                "offset": 0
+    async ({ offset, limit }) => {
+        // let cancel
+        const response = await axios.post(
+            'https://api.weekday.technology/adhoc/getSampleJdJSON',
+            { limit, offset },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // cancelToken: new axios.CancelToken(c => cancel=c)
             },
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }
-        const response = await axios(options);
-        return response.data.jdList;
+        );
+        console.log(offset, limit)
+        // return ()=>cancel();
+        return response.data;
     }
 );
-
 const jobSlice = createSlice({
     name: 'jobs',
     initialState: {
         jobData: [],
         loading: false,
         error: null,
+        offset: 0,
+        limit: 10,
+        hasMore: true,
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -36,7 +39,10 @@ const jobSlice = createSlice({
             })
             .addCase(fetchJobData.fulfilled, (state, action) => {
                 state.loading = false;
-                state.jobData = action.payload;
+                // state.jobData = action.payload.jdList;
+                state.jobData = removeDuplicates([...state.jobData, ...action.payload.jdList]);
+                state.hasMore = action.payload.jdList.length > 0;
+                state.offset+=state.limit
                 state.error = null;
             })
             .addCase(fetchJobData.rejected, (state, action) => {
@@ -45,5 +51,18 @@ const jobSlice = createSlice({
             });
     },
 });
+
+
+const removeDuplicates = (data) => {
+    const uniqueKeys = new Set();
+    return data.filter(item => {
+        const key = item.jdUid;
+        if (!uniqueKeys.has(key)) {
+            uniqueKeys.add(key);
+            return true;
+        }
+        return false;
+    });
+};
 
 export default jobSlice.reducer;
