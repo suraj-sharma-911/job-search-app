@@ -1,3 +1,12 @@
+# To run the project download/clone the Repository locally
+
+-Navigate to the folder Jov-search-app
+-run the following commands in terminal
+npm -install
+npm run dev
+
+check => http://localhost:5173/
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
